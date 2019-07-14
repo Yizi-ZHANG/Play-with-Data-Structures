@@ -1,0 +1,113 @@
+public class DynamicArray {
+    private int[] data;
+    private int size;
+
+    public void Array(int Capacity){
+        data = new int[Capacity];
+    }
+    public void Array(){
+        data = new int[10];
+    }
+    public int getSize(){
+        return size;
+    }
+    public int getCapacity(){
+        return data.length;
+    }
+    public boolean isEmpty(){
+        return size == 0;
+    }
+    public boolean contains(int e){
+        for(int i = 0; i < size; i ++){
+            if(data[i] == e)
+                return true;
+        }
+        return false;
+    }
+    //  改查
+    public int get(int index){
+        return data[index];
+    }
+    public void set(int index, int e){
+        data[index] = e;
+    }
+    public int find(int e){
+        for(int i = 0; i < size; i ++){
+            if(data[i] == e)
+                return i;
+        }
+        return -1;
+    }
+
+    @Override
+    public String toString(){
+        StringBuilder rlt = new StringBuilder();
+        rlt.append("Array:[");
+        for(int i = 0; i < size; i ++){
+            rlt.append(data[i]);
+            if(i != size - 1)
+                rlt.append(", ");
+        }
+        rlt.append("]");
+        return rlt.toString();
+    }
+
+    //  增删
+    public void add(int index, int e){
+        if(index < 0 || index >= size){
+            throw new IllegalArgumentException("add Failed, need index >= 0 and index < size");
+        }
+        if(size == data.length){
+            int newCapacity = 2 * data.length;
+            resize(newCapacity);
+        }
+        for(int i = index; i < size; i ++){
+            data[i+1] = data[i];
+        }
+        data[index] = e;
+        size ++;
+    }
+    public void addLast(int e){
+        add(size, e);
+    }
+    public void addFirst(int e){
+        add(0, e);
+    }
+    public int remove(int index){
+        //  if data is empty,then index can only be 0,but...
+        if(index < 0 || index >= size){
+            throw new IllegalArgumentException("add Failed, need index >= 0 and index < size");
+        }
+
+        int rlt = data[index];
+        for(int i = size - 1; i > index; i ++){
+            data[i-1] = data[i];
+        }
+        size --;
+        if(data.length / size == 4) {
+            int newCapacity = data.length / 2;
+            resize(newCapacity);
+        }
+        return rlt;
+    }
+    //  if data is empty, the following methods will throw illegal messages
+    public int removeLast(){
+        return remove(size - 1);
+    }
+    public int removeFirst(){
+        return remove(0);
+    }
+    public void removeElement(int e){
+        int index = find(e);
+        if(index != -1)
+            remove(index);
+    }
+
+    private void resize(int newCapacity){
+        int[] newData = new int[newCapacity];
+        for(int i = 0; i < size; i ++){
+            newData[i] = data[i];
+        }
+        data = newData;
+    }
+}
